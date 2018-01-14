@@ -59,11 +59,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
 
     private String getUsername() {
         // Intent from first activity
-        TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
+        //TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
 
-        Intent intent = getIntent();
-        String str = intent.getStringExtra("username");
-        return str;
+        // Intent intent = getIntent();
+        return getIntent().getStringExtra("username");
     }
 
     /**
@@ -75,6 +74,16 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userData = new UserData(this.getUsername());
+
+        String groupName = getIntent().getExtras().getString("group_name");
+        if (groupName != null && !groupName.equals("")) {
+            userData.setGroup(getIntent().getExtras().getString("group_name"));
+            Toast.makeText(this, "GROUP ADD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+        } else {
+            showUsersList();
+        }
+
         setContentView(R.layout.activity_idlinglist);
         myGroupFragment = new MyGroupFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();
@@ -84,11 +93,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         messageSender = new MessageSender(mm, HELLO_PORT);
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
-        userData = new UserData(this.getUsername());
 
-        String welcomeMsg = "Hello " + getUsername();
+/*        String welcomeMsg = "Hello " + getUsername();
         TextView txtStatus = (TextView) findViewById(R.id.username);
-        txtStatus.setText(welcomeMsg);
+        txtStatus.setText(welcomeMsg);*/
     }
 
     /**
@@ -330,6 +338,11 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
     public void onChooseGroup(String groupName) throws RightMeshException {
         this.userData.setGroup(groupName);
         messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
+    }
+
+    public void showUsersList(){
+        Intent intent = new Intent(this, UsersListActivity.class);
+        startActivity(intent);
     }
 }
 

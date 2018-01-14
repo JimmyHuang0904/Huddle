@@ -24,7 +24,7 @@ public class LoginActivity extends Activity {
     public void createGroup(View view) {
         username = (EditText) findViewById(R.id.username);
 
-        Intent intent = new Intent(this, UsersListActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("username", username.getText().toString());
         intent.putExtra("group_name", groupName);
 
