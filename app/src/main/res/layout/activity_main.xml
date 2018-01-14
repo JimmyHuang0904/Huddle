@@ -54,10 +54,13 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnHello"
-        android:layout_marginBottom="23dp"
+        android:layout_above="@+id/btnConfigure"
+        android:layout_marginBottom="13dp"
+        android:layout_marginLeft="63dp"
+        android:layout_marginStart="63dp"
         android:layout_toEndOf="@+id/username"
         android:layout_toRightOf="@+id/username"
-        android:text="Button"
-        android:onClick="onUserDisconnect"/>
+        android:text="testAlarm"
+        android:onClick="onUserDisconnect" />
+
 </RelativeLayout>
