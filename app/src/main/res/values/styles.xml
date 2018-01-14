@@ -10,4 +10,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="UserPrompt" parent="Theme.AppCompat.Light.Dialog.Alert" />
+
 </resources>

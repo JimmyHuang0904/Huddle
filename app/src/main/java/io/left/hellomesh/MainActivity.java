@@ -1,5 +1,8 @@
 package io.left.hellomesh;
 
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.Build;
 import android.content.Intent;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,7 +33,11 @@ import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 
-public class MainActivity extends Activity implements MeshStateListener {
+/**
+ * Main activity of the app. Should only be on the user's screen when the user has created a group
+ * Or is currently in a group
+ */
+public class MainActivity extends FragmentActivity implements MeshStateListener {
     // Port to bind app to.
     private static final int HELLO_PORT = 9090;
 
@@ -50,13 +58,16 @@ public class MainActivity extends Activity implements MeshStateListener {
 
     ListAdapter mAdapter = null;
 
+    // Screen fragments
+    MyGroupFragment myGroupFragment;
+    ConnectedHandleFragment connectedHandleFragment;
+
     private String getUsername() {
         // Intent from first activity
-        TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
+        //TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
 
-        Intent intent = getIntent();
-        String str = intent.getStringExtra("username");
-        return str;
+        // Intent intent = getIntent();
+        return getIntent().getStringExtra("username");
     }
 
     /**
@@ -68,15 +79,21 @@ public class MainActivity extends Activity implements MeshStateListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userData = new UserData(this.getUsername());
+
+        String groupName = getIntent().getExtras().getString("group_name");
+        if (groupName != null && !groupName.equals("")) {
+            userData.setGroup(getIntent().getExtras().getString("group_name"));
+            Toast.makeText(this, "GROUP ADD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+        }
+
         setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
-        userData = new UserData(this.getUsername());
         mAdapter = new ListAdapter(this);
-
     }
 
     /**
@@ -181,9 +198,9 @@ public class MainActivity extends Activity implements MeshStateListener {
         // Populate lists with groups and names here
         for(String groupName : peerStore.getAllGroupNames()) {
             mAdapter.addSectionHeaderItem("Group " + groupName);
-            for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
+            /*for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
                 mAdapter.addItem("Peer: " + peerName);
-            }
+            }*/
         }
 
         mAdapter.addItem("yep");
@@ -245,7 +262,7 @@ public class MainActivity extends Activity implements MeshStateListener {
             // SOMEBODY DISCONNECTED OH NO!!!!
             // if theyre part of your group, then you should be alarmed
             if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
-                startAlarm();
+                startAlarm(userData.getName());
             }
         }
 
@@ -290,10 +307,10 @@ public class MainActivity extends Activity implements MeshStateListener {
     }
 
     public void onUserDisconnect(View view){
-        startAlarm();
+        startAlarm("asdf");
     }
 
-    private void startAlarm() {
+    private void startAlarm(String userDisconnected) {
         // Remove yourself from the group
         // Mark yourself as disconnected
         // Throw up an error message
@@ -305,7 +322,7 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Alert");
-        alertDialog.setMessage("You have been disconnected. Others will be notified shortly.");
+        alertDialog.setMessage(userDisconnected +" have been disconnected. Others will be notified shortly.");
         // Alert dialog button
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
@@ -318,11 +335,28 @@ public class MainActivity extends Activity implements MeshStateListener {
                 });
         alertDialog.show();
         r.play();
+
+        shakeItBaby();
+    }
+
+    // Vibrate for 1000 milliseconds
+    private void shakeItBaby() {
+        int milliSeconds = 1000;
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(milliSeconds, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(milliSeconds);
+        }
     }
 
     public void onChooseGroup(String groupName) throws RightMeshException {
         this.userData.setGroup(groupName);
         messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
+    }
+
+    public void showUsersList(){
+        Intent intent = new Intent(this, UsersListActivity.class);
+        startActivity(intent);
     }
 }
 
