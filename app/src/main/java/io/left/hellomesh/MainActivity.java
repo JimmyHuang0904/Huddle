@@ -1,5 +1,8 @@
 package io.left.hellomesh;
 
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.Build;
 import android.content.Intent;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -298,6 +301,18 @@ public class MainActivity extends Activity implements MeshStateListener {
                 });
         alertDialog.show();
         r.play();
+
+        shakeItBaby();
+    }
+
+    // Vibrate for 1000 milliseconds
+    private void shakeItBaby() {
+        int milliSeconds = 1000;
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(milliSeconds, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(milliSeconds);
+        }
     }
 
     public void onChooseGroup(String groupName) throws RightMeshException {
