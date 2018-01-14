@@ -10,13 +10,13 @@
         android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog Title"
+        android:text="Enter your new group name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/userInputDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Something"
+        android:hint="Enter name"
         android:inputType="text" />
 </LinearLayout>
