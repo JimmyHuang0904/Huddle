@@ -9,23 +9,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.left.hellomesh.LoginActivity">
 
-    <Button
-        android:id="@+id/button1"
+    <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:onClick="signIn"
-        android:text="@string/buttonSign" />
-
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/rm_launcher"/>
+    
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="56dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/login_hint" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="52dp"
+        android:onClick="createGroup"
+        android:text="@string/createGroup" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/button1"
+        android:layout_marginBottom="95dp"
+        android:onClick="joinGroup"
+        android:text="@string/joinGroup" />
 
 </RelativeLayout>

@@ -13,7 +13,18 @@ public class LoginActivity extends Activity {
 
     EditText username;
 
-    public void signIn(View view)
+    // createGroup and joinGroup could be refactored later
+    public void createGroup(View view)
+    {
+        username = (EditText)findViewById(R.id.username);
+
+        Intent intent = new Intent(this, UsersListActivity.class);
+        intent.putExtra("username", username.getText().toString());
+
+        startActivity(intent);
+    }
+
+    public void joinGroup(View view)
     {
         username = (EditText)findViewById(R.id.username);
 

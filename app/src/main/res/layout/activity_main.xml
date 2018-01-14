@@ -13,7 +13,7 @@
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello RightMesh!"/>
+        android:text="Hello!"/>
 
     <Button
         android:enabled="false"
