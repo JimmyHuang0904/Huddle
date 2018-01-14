@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+
+/**
+ * Obsolete
+ */
 public class ConnectedActivity extends FragmentActivity{
 
     MyGroupFragment myGroupFragment;

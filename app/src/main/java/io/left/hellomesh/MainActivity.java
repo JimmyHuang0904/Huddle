@@ -8,6 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +27,11 @@ import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 
-public class MainActivity extends Activity implements MeshStateListener {
+/**
+ * Main activity of the app. Should only be on the user's screen when the user has created a group
+ * Or is currently in a group
+ */
+public class MainActivity extends FragmentActivity implements MeshStateListener {
     // Port to bind app to.
     private static final int HELLO_PORT = 9090;
 
@@ -44,6 +49,10 @@ public class MainActivity extends Activity implements MeshStateListener {
 
     // Keep track of data related to the device's user
     UserData userData = null;
+
+    // Screen fragments
+    MyGroupFragment myGroupFragment;
+    ConnectedHandleFragment connectedHandleFragment;
 
     private String getUsername() {
         // Intent from first activity
@@ -63,7 +72,10 @@ public class MainActivity extends Activity implements MeshStateListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_idlinglist);
+        myGroupFragment = new MyGroupFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();
+        //setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
