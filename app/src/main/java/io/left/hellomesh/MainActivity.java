@@ -104,7 +104,6 @@ public class MainActivity extends Activity implements MeshStateListener {
      */
     @Override
     public void meshStateChanged(MeshID uuid, int state) {
-        TextView WelcomeText;
         if (state == MeshStateListener.SUCCESS) {
             try {
                 // Binds this app to MESH_PORT.
@@ -138,11 +137,8 @@ public class MainActivity extends Activity implements MeshStateListener {
             } catch (RightMeshException e) {
                 String status = "Error initializing the library" + e.toString();
                 Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
-
-                WelcomeText = (TextView) findViewById(R.id.txtStatus);
-                String txtStatus = getUsername();
-//                TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
-                WelcomeText.setText(txtStatus);
+                TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
+                txtStatus.setText(status);
                 return;
             }
         }
