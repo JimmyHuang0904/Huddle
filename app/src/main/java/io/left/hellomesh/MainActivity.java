@@ -37,8 +37,11 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     HashSet<MeshID> users = new HashSet<>();
 
-    // An object to send messages over the mesh. Initialized in onCreate
+    // Object to send messages over the mesh. Initialized in onCreate
     MessageSender messageSender = null;
+
+    // Object to parse and handle message coming over the mesh. Initialized in onCreate
+    MessageHandler messageHandler = null;
 
 
     /**
@@ -54,7 +57,7 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
-
+        messageHandler = new MessageHandler();
     }
 
     /**
@@ -157,7 +160,9 @@ public class MainActivity extends Activity implements MeshStateListener {
      */
     private void handleDataReceived(MeshManager.RightMeshEvent e) {
         final MeshManager.DataReceivedEvent event = (MeshManager.DataReceivedEvent) e;
+        messageHandler.handleMessage(new String(event.data));
 
+        // TODO: remove the toasts once we dont need them
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
