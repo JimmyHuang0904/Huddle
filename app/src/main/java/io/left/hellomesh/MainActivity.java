@@ -215,6 +215,8 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
                 }else {
                     if (peerStore.getPeer(itemText) != null && peerStore.getPeer(itemText).getGroupName() != null) {
                         groupName = peerStore.getPeer(itemText).getGroupName();
+                    }else {
+                        return;
                     }
                 }
                 userData.setGroup(groupName);
