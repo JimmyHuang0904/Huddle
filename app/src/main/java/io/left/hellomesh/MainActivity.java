@@ -218,6 +218,11 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         } else if (event.state == REMOVED){
             peerStore.removePeer(event.peerUuid);
+            // SOMEBODY DISCONNECTED OH NO!!!!
+            // if theyre part of your group, then you should be alarmed
+            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
+                startAlarm();
+            }
         }
 
         // Update display.
@@ -235,8 +240,11 @@ public class MainActivity extends Activity implements MeshStateListener {
      * @param v calling view
      */
     public void sendHello(View v) throws RightMeshException {
+        String ownName = userData.getName() != null ? userData.getName() : mm.getUuid().toString();
         for(MeshID receiver : peerStore.getAllUuids()) {
-            String msg = "Hello to: " + receiver + " from" + mm.getUuid();
+            String theirName = peerStore.getPeer(receiver).getName() != null ? peerStore.getPeer(receiver).getName(): receiver.toString();
+            String msg = String.format("Hello to: %s from %s", theirName, ownName);
+
             MeshUtility.Log(this.getClass().getCanonicalName(), "MSG: " + msg);
             byte[] testData = msg.getBytes();
             mm.sendDataReliable(receiver, HELLO_PORT, testData);
@@ -258,6 +266,10 @@ public class MainActivity extends Activity implements MeshStateListener {
     }
 
     public void onUserDisconnect(View view){
+        startAlarm();
+    }
+
+    private void startAlarm() {
         // Remove yourself from the group
         // Mark yourself as disconnected
         // Throw up an error message
