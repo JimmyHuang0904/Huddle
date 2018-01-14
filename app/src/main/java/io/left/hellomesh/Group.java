@@ -11,10 +11,12 @@ public class Group {
 
     private List<User> users;
     private int numUsers;
+    private String groupName;
 
-    public Group() {
+    public Group(String groupName) {
         users = new ArrayList<>();
         numUsers = 0;
+        this.groupName = groupName;
     }
 
     public void addUser(User user) {
@@ -51,5 +53,9 @@ public class Group {
 
     public int getNumUsers() {
         return numUsers;
+    }
+
+    public String getGroupName(){
+        return groupName;
     }
 }
