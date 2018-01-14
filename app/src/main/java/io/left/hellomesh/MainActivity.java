@@ -1,5 +1,6 @@
 package io.left.hellomesh;
 
+import android.content.Intent;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -45,6 +46,14 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Keep track of users connected to the mesh
     UserStore userStore = null;
 
+    private String getUsername() {
+        // Intent from first activity
+        TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
+
+        Intent intent = getIntent();
+        String str = intent.getStringExtra("username");
+        return str;
+    }
 
     /**
      * Called when app first opens, initializes {@link AndroidMeshManager} reference (which will
@@ -99,6 +108,7 @@ public class MainActivity extends Activity implements MeshStateListener {
      */
     @Override
     public void meshStateChanged(MeshID uuid, int state) {
+        TextView WelcomeText;
         if (state == MeshStateListener.SUCCESS) {
             try {
                 // Binds this app to MESH_PORT.
@@ -132,8 +142,11 @@ public class MainActivity extends Activity implements MeshStateListener {
             } catch (RightMeshException e) {
                 String status = "Error initializing the library" + e.toString();
                 Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
-                TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
-                txtStatus.setText(status);
+
+                WelcomeText = (TextView) findViewById(R.id.txtStatus);
+                String txtStatus = getUsername();
+//                TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
+                WelcomeText.setText(txtStatus);
                 return;
             }
         }
