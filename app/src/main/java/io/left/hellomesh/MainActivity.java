@@ -84,10 +84,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             showUsersList();
         }
 
-        setContentView(R.layout.activity_idlinglist);
+/*        setContentView(R.layout.activity_idlinglist);
         myGroupFragment = new MyGroupFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();
-        //setContentView(R.layout.activity_main);
+        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();*/
+        setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
