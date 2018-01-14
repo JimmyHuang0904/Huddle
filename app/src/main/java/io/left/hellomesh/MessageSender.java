@@ -1,6 +1,6 @@
 package io.left.hellomesh;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.id.MeshID;
@@ -29,7 +29,7 @@ public class MessageSender {
         this.sendMessageToIndividual(msg, receiver);
     }
 
-    public void sendGroupToMany(HashSet<MeshID> users, String groupName) throws RightMeshException {
+    public void sendGroupToMany(Set<MeshID> users, String groupName) throws RightMeshException {
         for(MeshID receiver : users) {
             sendGroupToIndividual(receiver, groupName);
         }

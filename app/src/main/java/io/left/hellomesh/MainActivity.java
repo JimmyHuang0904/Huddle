@@ -42,6 +42,9 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Keep track of users connected to the mesh
     PeerStore peerStore = null;
 
+    // Keep track of data related to the device's user
+    UserData userData = null;
+
     private String getUsername() {
         // Intent from first activity
         TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
@@ -66,6 +69,7 @@ public class MainActivity extends Activity implements MeshStateListener {
         messageSender = new MessageSender(mm, HELLO_PORT);
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
+        userData = new UserData(this.getUsername());
     }
 
     /**
@@ -134,6 +138,9 @@ public class MainActivity extends Activity implements MeshStateListener {
                 Button btnSend = (Button) findViewById(R.id.btnHello);
                 btnConfigure.setEnabled(true);
                 btnSend.setEnabled(true);
+
+                // initialized, so say that the user is now connected
+                userData.setConnected();
             } catch (RightMeshException e) {
                 String status = "Error initializing the library" + e.toString();
                 Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
@@ -198,12 +205,12 @@ public class MainActivity extends Activity implements MeshStateListener {
             peerStore.addPeer(event.peerUuid);
             try {
                 // tell the new person your name
-                messageSender.sendName(event.peerUuid, "PUT ACTUAL NAME HERE");
+                messageSender.sendName(event.peerUuid, this.userData.getName());
 
                 // if you're in a group, tell the new person you're in that group
-                boolean isInGroup = true; // TODO: change this to check if actually in a group
+                boolean isInGroup = this.userData.getGroup() != null;
                 if (isInGroup) {
-                    messageSender.sendGroupToIndividual(event.peerUuid, "PUT GROUP NAME HERE");
+                    messageSender.sendGroupToIndividual(event.peerUuid, this.userData.getGroup());
                 }
             }catch (RightMeshException exception) {
                 exception.printStackTrace();
@@ -277,5 +284,9 @@ public class MainActivity extends Activity implements MeshStateListener {
         r.play();
     }
 
+    public void onChooseGroup(String groupName) throws RightMeshException {
+        this.userData.setGroup(groupName);
+        messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
+    }
 }
 
