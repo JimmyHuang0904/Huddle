@@ -1,25 +1,17 @@
 package io.left.hellomesh;
 
-import android.app.Fragment;
-import android.app.ListActivity;
-import android.app.ListFragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import android.support.design.widget.FloatingActionButton;
 
 /**
  * Class to display list of users and group the user is currently in.
  */
-public class MyGroupFragment extends ListFragment {
+public class MyGroupFragment extends Fragment {
 
 /*    private ListAdapter mAdapter;
 
@@ -44,7 +36,7 @@ public class MyGroupFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_connected_handle, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_group, container, false);
 
         String[] users = {"John", "Amy", "Mark"};
 

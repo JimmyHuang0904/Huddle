@@ -17,8 +17,8 @@ public class ConnectedActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idlinglist);
 
-        connectedHandleFragment = new ConnectedHandleFragment();
+        //connectedHandleFragment = new ConnectedHandleFragment();
         myGroupFragment = new MyGroupFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, connectedHandleFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();
     }
 }
