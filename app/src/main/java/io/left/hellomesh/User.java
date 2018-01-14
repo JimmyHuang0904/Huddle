@@ -5,25 +5,21 @@ package io.left.hellomesh;
  */
 
 public class User {
-
-    private String UUID;
     private String name;
     // Connected or disconnected
     private boolean isConnected;
     private String groupName;
 
-    public User(String UUID, String name){
-        this.UUID = UUID;
-        this.name = name;
-        isConnected = false;
-    }
-
-    public String getUUID() {
-        return UUID;
+    public User(){
+        isConnected = true;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean getConnectedStatus() {

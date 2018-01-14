@@ -7,27 +7,29 @@ import android.util.Log;
  */
 
 public class MessageHandler {
+    private UserStore userStore = null;
 
-    public MessageHandler() {
-        // TODO: pass dependencies for setting user fields here
+    public MessageHandler(UserStore userStore) {
+        this.userStore = userStore;
     }
 
     public void handleMessage(String messageContent) throws IllegalArgumentException{
-        Log.d("handler", messageContent);
         String[] segments = messageContent.split(":");
         if (segments.length < 2 || segments.length > 3) {
             throw new IllegalArgumentException("Wrong number of : separated segments in message");
         }
+
         String verb = segments[0];
         String targetUser = segments[1];
+
         if (verb.equals("NAME")) {
             String userName = segments[2];
-            // TODO: users[targetUser].name = userName;
+            userStore.getUser(targetUser).setName(userName);
         }else if (verb.equals("GROUP")) {
             String groupName = segments[2];
-            // TODO: users[targerUser].group = groupName;
+            userStore.getUser(targetUser).setGroupName(groupName);
         }else if (verb.equals("UNGROUP")) {
-            // TODO: users[targetUser].group = null;
+            userStore.getUser(targetUser).setGroupName(null);
         }
     }
 }
