@@ -70,6 +70,10 @@ public class MainActivity extends Activity implements MeshStateListener {
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
         userData = new UserData(this.getUsername());
+
+        String welcomeMsg = "Hello " + getUsername();
+        TextView txtStatus = (TextView) findViewById(R.id.username);
+        txtStatus.setText(welcomeMsg);
     }
 
     /**
