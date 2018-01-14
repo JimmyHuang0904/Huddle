@@ -1,15 +1,10 @@
 package io.left.hellomesh;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,10 +51,6 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
 
     ListAdapter mAdapter = null;
 
-    // Screen fragments
-    MyGroupFragment myGroupFragment;
-    ConnectedHandleFragment connectedHandleFragment;
-
     private String getUsername() {
         // Intent from first activity
         //TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
@@ -79,12 +70,6 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         super.onCreate(savedInstanceState);
         userData = new UserData(this.getUsername());
 
-        String groupName = getIntent().getExtras().getString("group_name");
-        if (groupName != null && !groupName.equals("")) {
-            userData.setGroup(getIntent().getExtras().getString("group_name"));
-            Toast.makeText(this, "GROUP ADD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-        }
-
         setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
@@ -92,6 +77,13 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
         mAdapter = new ListAdapter(this);
+
+        String groupName = getIntent().getExtras().getString("group_name");
+        if (groupName != null && !groupName.equals("")) {
+            userData.setGroup(getIntent().getExtras().getString("group_name"));
+            Toast.makeText(this, "GROUP ADD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+            mAdapter.addSectionHeaderItem("Acquiring Groups...");
+        }
     }
 
     /**
@@ -172,10 +164,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             }
         }
 
-        // Update display on successful calls (i.e. not FAILURE or DISABLED).
+/*        // Update display on successful calls (i.e. not FAILURE or DISABLED).
         if (state == MeshStateListener.SUCCESS || state == MeshStateListener.RESUME) {
             updateStatus();
-        }
+        }*/
     }
 
     /**
@@ -194,10 +186,14 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         ListView listView = (ListView) findViewById(R.id.groupList);
         // Populate lists with groups and names here
         mAdapter.clear();
-        for(String groupName : peerStore.getAllGroupNames()) {
-            mAdapter.addSectionHeaderItem("Group: " + groupName);
-            for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
-                mAdapter.addItem(peerName);
+        if (peerStore.getAllUuids().isEmpty()){
+            mAdapter.addSectionHeaderItem("Acquiring Groups...");
+        } else {
+            for (String groupName : peerStore.getAllGroupNames()) {
+                mAdapter.addSectionHeaderItem("Group: " + groupName);
+                for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
+                    mAdapter.addItem(peerName);
+                }
             }
         }
 
@@ -289,13 +285,13 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             }
         }
 
-        // Update display.
+/*        // Update display.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 updateStatus();
             }
-        });
+        });*/
     }
 
     /**
@@ -327,59 +323,6 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         } catch(RightMeshException ex) {
             MeshUtility.Log(this.getClass().getCanonicalName(), "Service not connected");
         }
-    }
-
-    public void onUserDisconnect(View view){
-        startAlarm("asdf");
-    }
-
-    private void startAlarm(String userDisconnected) {
-        // Remove yourself from the group
-        // Mark yourself as disconnected
-        // Throw up an error message
-        // If the error is acknowledged, return user back to the main menu
-
-        // Alarm sound
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        final Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-
-        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage(userDisconnected +" have been disconnected. Others will be notified shortly.");
-        // Alert dialog button
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        r.stop();
-                        dialog.dismiss();// use dismiss to cancel alert dialog
-
-                        // Remove yourself from the group and return to main screen
-                    }
-                });
-        alertDialog.show();
-        r.play();
-
-        shakeItBaby();
-    }
-
-    // Vibrate for 1000 milliseconds
-    private void shakeItBaby() {
-        int milliSeconds = 1000;
-        if (Build.VERSION.SDK_INT >= 26) {
-            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(milliSeconds, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(milliSeconds);
-        }
-    }
-
-    public void onChooseGroup(String groupName) throws RightMeshException {
-        this.userData.setGroup(groupName);
-        messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
-    }
-
-    public void showUsersList(){
-        Intent intent = new Intent(this, UsersListActivity.class);
-        startActivity(intent);
     }
 }
 
