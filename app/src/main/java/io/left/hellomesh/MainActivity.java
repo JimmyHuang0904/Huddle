@@ -1,7 +1,9 @@
 package io.left.hellomesh;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -38,8 +40,11 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     HashSet<MeshID> users = new HashSet<>();
 
-    // An object to send messages over the mesh. Initialized in onCreate
+    // Object to send messages over the mesh. Initialized in onCreate
     MessageSender messageSender = null;
+
+    // Object to parse and handle message coming over the mesh. Initialized in onCreate
+    MessageHandler messageHandler = null;
 
     private String getUsername() {
         // Intent from first activity
@@ -63,7 +68,7 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
-
+        messageHandler = new MessageHandler();
     }
 
     /**
@@ -170,7 +175,9 @@ public class MainActivity extends Activity implements MeshStateListener {
      */
     private void handleDataReceived(MeshManager.RightMeshEvent e) {
         final MeshManager.DataReceivedEvent event = (MeshManager.DataReceivedEvent) e;
+        messageHandler.handleMessage(new String(event.data));
 
+        // TODO: remove the toasts once we dont need them
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -249,5 +256,33 @@ public class MainActivity extends Activity implements MeshStateListener {
             MeshUtility.Log(this.getClass().getCanonicalName(), "Service not connected");
         }
     }
+
+    public void onUserDisconnect(View view){
+        // Remove yourself from the group
+        // Mark yourself as disconnected
+        // Throw up an error message
+        // If the error is acknowledged, return user back to the main menu
+
+        // Alarm sound
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        final Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("You have been disconnected. Others will be notified shortly.");
+        // Alert dialog button
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        r.stop();
+                        dialog.dismiss();// use dismiss to cancel alert dialog
+
+                        // Remove yourself from the group and return to main screen
+                    }
+                });
+        alertDialog.show();
+        r.play();
+    }
+
 }
 
