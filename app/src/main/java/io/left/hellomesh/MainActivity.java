@@ -283,5 +283,10 @@ public class MainActivity extends Activity implements MeshStateListener {
         alertDialog.show();
         r.play();
     }
+
+    public void onChooseGroup(String groupName) throws RightMeshException {
+        this.userData.setGroup(groupName);
+        messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
+    }
 }
 
