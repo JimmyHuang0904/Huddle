@@ -10,6 +10,7 @@ public class User {
     private String name;
     // Connected or disconnected
     private boolean isConnected;
+    private String groupName;
 
     public User(String UUID, String name){
         this.UUID = UUID;
@@ -31,5 +32,13 @@ public class User {
 
     public void setConnectedStatus(boolean isConnected){
         this.isConnected = isConnected;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
