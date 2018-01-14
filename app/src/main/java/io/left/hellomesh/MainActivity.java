@@ -11,9 +11,12 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,8 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
     // Keep track of data related to the device's user
     UserData userData = null;
 
+    ListAdapter mAdapter = null;
+
     // Screen fragments
     MyGroupFragment myGroupFragment;
     ConnectedHandleFragment connectedHandleFragment;
@@ -80,23 +85,15 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         if (groupName != null && !groupName.equals("")) {
             userData.setGroup(getIntent().getExtras().getString("group_name"));
             Toast.makeText(this, "GROUP ADD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-        } else {
-            showUsersList();
         }
 
-/*        setContentView(R.layout.activity_idlinglist);
-        myGroupFragment = new MyGroupFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.idlinglist, myGroupFragment).commit();*/
         setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
-
-/*        String welcomeMsg = "Hello " + getUsername();
-        TextView txtStatus = (TextView) findViewById(R.id.username);
-        txtStatus.setText(welcomeMsg);*/
+        mAdapter = new ListAdapter(this);
     }
 
     /**
@@ -195,6 +192,20 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         txtStatus.setText(status);
     }
 
+    private void updateList() {
+        ListView listView = (ListView) findViewById(R.id.groupList);
+        // Populate lists with groups and names here
+        mAdapter.clear();
+        for(String groupName : peerStore.getAllGroupNames()) {
+            mAdapter.addSectionHeaderItem("Group " + groupName);
+            for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
+                mAdapter.addItem("Peer: " + peerName);
+            }
+        }
+
+        listView.setAdapter(mAdapter);
+    }
+
     /**
      * Handles incoming data events from the mesh - toasts the contents of the data.
      *
@@ -208,6 +219,7 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                updateList();
                 // Toast data contents.
                 String message = new String(event.data);
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -247,7 +259,7 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             peerStore.removePeer(event.peerUuid);
             // SOMEBODY DISCONNECTED OH NO!!!!
             // if theyre part of your group, then you should be alarmed
-            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
+            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid) != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
                 startAlarm(userData.getName());
             }
         }
