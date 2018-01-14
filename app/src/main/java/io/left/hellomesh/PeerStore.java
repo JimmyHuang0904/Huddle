@@ -56,8 +56,6 @@ public class PeerStore {
         for (Peer peer : peerMap.values()) {
             if (peer.getGroupName() != null) {
                 uniqueGroupNames.add(peer.getGroupName());
-            }else {
-                uniqueGroupNames.add("No group");
             }
         }
         String[] namesArr = uniqueGroupNames.toArray(new String[uniqueGroupNames.size()]);
@@ -68,7 +66,7 @@ public class PeerStore {
     public String[] getPeerNamesInGroup(String groupName) {
         List<String> names = new ArrayList<>();
         for (Peer peer : peerMap.values()) {
-            if (peer.getGroupName().equals(groupName)) {
+            if (peer.getGroupName() != null && peer.getName() != null && peer.getGroupName().equals(groupName)) {
                 names.add(peer.getName());
             }
         }

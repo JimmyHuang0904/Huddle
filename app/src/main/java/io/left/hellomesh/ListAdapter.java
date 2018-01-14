@@ -24,6 +24,12 @@ class ListAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void clear() {
+        mData = new ArrayList<String>();
+        sectionHeader = new TreeSet<Integer>();
+        notifyDataSetChanged();
+    }
+
     public void addItem(final String item) {
         mData.add(item);
         notifyDataSetChanged();

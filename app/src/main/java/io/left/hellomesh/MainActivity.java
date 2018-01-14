@@ -194,16 +194,14 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
 
     private void updateList() {
         ListView listView = (ListView) findViewById(R.id.groupList);
-
         // Populate lists with groups and names here
+        mAdapter.clear();
         for(String groupName : peerStore.getAllGroupNames()) {
             mAdapter.addSectionHeaderItem("Group " + groupName);
-            /*for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
+            for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
                 mAdapter.addItem("Peer: " + peerName);
-            }*/
+            }
         }
-
-        mAdapter.addItem("yep");
 
         listView.setAdapter(mAdapter);
     }
@@ -261,7 +259,7 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             peerStore.removePeer(event.peerUuid);
             // SOMEBODY DISCONNECTED OH NO!!!!
             // if theyre part of your group, then you should be alarmed
-            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
+            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid) != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
                 startAlarm(userData.getName());
             }
         }
