@@ -28,39 +28,35 @@
         android:layout_marginTop="34dp"
         android:text="Creating Tokens..." />
 
-    <Button
-        android:enabled="false"
-        android:id="@+id/btnHello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="sendHello"
-        android:text="Send Hello"/>
-
-    <Button
-        android:enabled="false"
-        android:id="@+id/btnConfigure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnHello"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="configure"
-        android:text="Configure"/>
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnConfigure"
-        android:layout_marginBottom="13dp"
-        android:layout_marginLeft="63dp"
-        android:layout_marginStart="63dp"
-        android:layout_toEndOf="@+id/username"
-        android:layout_toRightOf="@+id/username"
-        android:text="testAlarm"
-        android:onClick="onUserDisconnect" />
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View android:id="@+id/strut"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"/>
+        <Button
+            android:enabled="false"
+            android:id="@+id/btnHello"
+            android:layout_width="0dp"
+            android:textColor="@color/white"
+            android:background="@color/red"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/strut"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="sendHello"
+            android:text="Alert"/>
+        <Button
+            android:enabled="false"
+            android:id="@+id/btnConfigure"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/strut"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="configure"
+            android:text="Configure"/>
+    </RelativeLayout>
 </RelativeLayout>
