@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -35,6 +37,10 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     HashSet<MeshID> users = new HashSet<>();
 
+    // An object to send messages over the mesh. Initialized in onCreate
+    MessageSender messageSender = null;
+
+
     /**
      * Called when app first opens, initializes {@link AndroidMeshManager} reference (which will
      * start the {@link MeshService} if it isn't already running.
@@ -47,6 +53,8 @@ public class MainActivity extends Activity implements MeshStateListener {
         setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
+        messageSender = new MessageSender(mm, HELLO_PORT);
+
     }
 
     /**
@@ -173,8 +181,21 @@ public class MainActivity extends Activity implements MeshStateListener {
     private void handlePeerChanged(MeshManager.RightMeshEvent e) {
         // Update peer list.
         MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !users.contains(event.peerUuid) && event.peerUuid != mm.getUuid()) {
+        if (event.state != REMOVED && !users.contains(event.peerUuid)) {
             users.add(event.peerUuid);
+            try {
+                // tell the new person your name
+                messageSender.sendName(event.peerUuid, "PUT ACTUAL NAME HERE");
+
+                // if you're in a group, tell the new person you're in that group
+                boolean isInGroup = true; // TODO: change this to check if actually in a group
+                if (isInGroup) {
+                    messageSender.sendGroupToIndividual(event.peerUuid, "PUT GROUP NAME HERE");
+                }
+            }catch (RightMeshException exception) {
+                exception.printStackTrace();
+            }
+
         } else if (event.state == REMOVED){
             users.remove(event.peerUuid);
         }
