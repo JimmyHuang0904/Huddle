@@ -248,7 +248,7 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             // SOMEBODY DISCONNECTED OH NO!!!!
             // if theyre part of your group, then you should be alarmed
             if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
-                startAlarm();
+                startAlarm(userData.getName());
             }
         }
 
@@ -293,10 +293,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
     }
 
     public void onUserDisconnect(View view){
-        startAlarm();
+        startAlarm("asdf");
     }
 
-    private void startAlarm() {
+    private void startAlarm(String userDisconnected) {
         // Remove yourself from the group
         // Mark yourself as disconnected
         // Throw up an error message
@@ -308,7 +308,7 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
 
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Alert");
-        alertDialog.setMessage("You have been disconnected. Others will be notified shortly.");
+        alertDialog.setMessage(userDisconnected +" have been disconnected. Others will be notified shortly.");
         // Alert dialog button
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
