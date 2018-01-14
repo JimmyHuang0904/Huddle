@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 
 buildscript {
     ext {
-        artifactory_app_username = "<Add your username here>"
-        artifactory_app_password = "<Add your password here>"
-        artifactory_app_key = "<Add your app key"
+        artifactory_app_username = "jimmyhuang0904"
+        artifactory_app_password = "90ed99d3b8a386f3ad2fef624830f107"
+        artifactory_app_key = "0x87d1322127ac0bf624dc126d2f2ec0fee960cdad"
     }
     repositories {
         maven {
@@ -61,8 +61,9 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:support-annotations:27.0.2'
     compile 'com.android.support:multidex:1.0.2'
-    compile ('io.left.rightmesh:rightmesh-library:0.4.0')
+    compile('io.left.rightmesh:rightmesh-library:0.4.0')
     compile 'com.android.support:appcompat-v7:27.0.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
