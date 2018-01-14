@@ -8,8 +8,11 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +48,8 @@ public class MainActivity extends Activity implements MeshStateListener {
     // Keep track of data related to the device's user
     UserData userData = null;
 
+    ListAdapter mAdapter = null;
+
     private String getUsername() {
         // Intent from first activity
         TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
@@ -70,6 +75,8 @@ public class MainActivity extends Activity implements MeshStateListener {
         peerStore = new PeerStore();
         messageHandler = new MessageHandler(peerStore);
         userData = new UserData(this.getUsername());
+        mAdapter = new ListAdapter(this);
+
     }
 
     /**
@@ -168,6 +175,22 @@ public class MainActivity extends Activity implements MeshStateListener {
         txtStatus.setText(status);
     }
 
+    private void updateList() {
+        ListView listView = (ListView) findViewById(R.id.groupList);
+
+        // Populate lists with groups and names here
+        for(String groupName : peerStore.getAllGroupNames()) {
+            mAdapter.addSectionHeaderItem("Group " + groupName);
+            for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
+                mAdapter.addItem("Peer: " + peerName);
+            }
+        }
+
+        mAdapter.addItem("yep");
+
+        listView.setAdapter(mAdapter);
+    }
+
     /**
      * Handles incoming data events from the mesh - toasts the contents of the data.
      *
@@ -181,6 +204,7 @@ public class MainActivity extends Activity implements MeshStateListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                updateList();
                 // Toast data contents.
                 String message = new String(event.data);
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();

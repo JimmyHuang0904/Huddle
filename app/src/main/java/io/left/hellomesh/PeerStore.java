@@ -54,7 +54,11 @@ public class PeerStore {
     public String[] getAllGroupNames() {
         Set<String> uniqueGroupNames = new HashSet<>();
         for (Peer peer : peerMap.values()) {
-            uniqueGroupNames.add(peer.getGroupName());
+            if (peer.getGroupName() != null) {
+                uniqueGroupNames.add(peer.getGroupName());
+            }else {
+                uniqueGroupNames.add("No group");
+            }
         }
         String[] namesArr = uniqueGroupNames.toArray(new String[uniqueGroupNames.size()]);
         Arrays.sort(namesArr);
