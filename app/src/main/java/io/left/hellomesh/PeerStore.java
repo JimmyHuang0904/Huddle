@@ -40,7 +40,7 @@ public class PeerStore {
                 return this.getPeer(meshID);
             }
         }
-        throw new NoSuchElementException("No peer found with uuid " + uuid);
+        return null;
     }
 
     public boolean containsPeer(MeshID uuid) {

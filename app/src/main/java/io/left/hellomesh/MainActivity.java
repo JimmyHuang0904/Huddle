@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -197,13 +199,36 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
         // Populate lists with groups and names here
         mAdapter.clear();
         for(String groupName : peerStore.getAllGroupNames()) {
-            mAdapter.addSectionHeaderItem("Group " + groupName);
+            mAdapter.addSectionHeaderItem("Group: " + groupName);
             for (String peerName : peerStore.getPeerNamesInGroup(groupName)) {
-                mAdapter.addItem("Peer: " + peerName);
+                mAdapter.addItem(peerName);
             }
         }
 
         listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                String itemText = (String) parent.getItemAtPosition(position);
+
+                String groupName = null;
+                if (itemText.startsWith("Group")) {
+                    groupName = itemText.substring(7);
+                }else {
+                    if (peerStore.getPeer(itemText) != null && peerStore.getPeer(itemText).getGroupName() != null) {
+                        groupName = peerStore.getPeer(itemText).getGroupName();
+                    }
+                }
+                userData.setGroup(groupName);
+                try {
+                    messageSender.sendGroupToMany(peerStore.getAllUuids(), groupName);
+                } catch (RightMeshException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
