@@ -7,24 +7,28 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.left.hellomesh.LoginActivity">
+    tools:context="io.left.hellomesh.LoginActivity"
+    android:background="@color/black_semi_transparent">
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/rm_launcher"/>
-    
+        android:src="@mipmap/rm_launcher"
+        android:id="@+id/appCompatImageView" />
+
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="11dp"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:inputType="textPersonName"
-        android:text="@string/login_hint" />
+        android:text="@string/login_hint"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/button1"
@@ -33,8 +37,10 @@
         android:layout_alignBottom="@+id/button3"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="52dp"
+        android:fontFamily="sans-serif"
         android:onClick="createGroup"
-        android:text="@string/createGroup" />
+        android:text="@string/createGroup"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/button3"
@@ -44,7 +50,19 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/button1"
         android:layout_marginBottom="95dp"
+        android:fontFamily="sans-serif"
         android:onClick="joinGroup"
-        android:text="@string/joinGroup" />
+        android:text="@string/joinGroup"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appCompatImageView"
+        android:layout_centerHorizontal="true"
+        android:text="H U D D L E"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
 </RelativeLayout>
