@@ -35,36 +35,41 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"/>
+
         <Button
-            android:enabled="false"
             android:id="@+id/btnHello"
             android:layout_width="0dp"
-            android:textColor="@color/white"
-            android:background="@color/red"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/strut"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:onClick="sendHello"
-            android:text="Alert"/>
-        <Button
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@id/strut"
+            android:background="@color/red"
             android:enabled="false"
+            android:onClick="sendHello"
+            android:text="Alert"
+            android:textColor="@color/white" />
+
+        <Button
             android:id="@+id/btnConfigure"
             android:layout_width="0dp"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/strut"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/half_black"
+            android:enabled="false"
             android:onClick="configure"
-            android:text="Configure"/>
+            android:text="Configure"
+            android:textColor="@color/black" />
 
         <ListView
             android:id="@+id/groupList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/btnHello"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="32dp" />
     </RelativeLayout>
