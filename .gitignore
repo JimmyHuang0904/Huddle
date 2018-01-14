@@ -38,4 +38,4 @@ Thumbs.db
 
 # Custom gitignore
 app/build.gradle
-
+.idea/workspace.xml
