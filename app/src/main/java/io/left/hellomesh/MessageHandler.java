@@ -1,16 +1,14 @@
 package io.left.hellomesh;
 
-import android.util.Log;
-
 /**
  * This class is for taking in the contents of messages received over the mesh network, and determining how to handle it
  */
 
 public class MessageHandler {
-    private UserStore userStore = null;
+    private PeerStore peerStore = null;
 
-    public MessageHandler(UserStore userStore) {
-        this.userStore = userStore;
+    public MessageHandler(PeerStore peerStore) {
+        this.peerStore = peerStore;
     }
 
     public void handleMessage(String messageContent) throws IllegalArgumentException{
@@ -20,16 +18,16 @@ public class MessageHandler {
         }
 
         String verb = segments[0];
-        String targetUser = segments[1];
+        String targetPeer = segments[1];
 
         if (verb.equals("NAME")) {
-            String userName = segments[2];
-            userStore.getUser(targetUser).setName(userName);
+            String peerName = segments[2];
+            peerStore.getPeer(targetPeer).setName(peerName);
         }else if (verb.equals("GROUP")) {
             String groupName = segments[2];
-            userStore.getUser(targetUser).setGroupName(groupName);
+            peerStore.getPeer(targetPeer).setGroupName(groupName);
         }else if (verb.equals("UNGROUP")) {
-            userStore.getUser(targetUser).setGroupName(null);
+            peerStore.getPeer(targetPeer).setGroupName(null);
         }
     }
 }

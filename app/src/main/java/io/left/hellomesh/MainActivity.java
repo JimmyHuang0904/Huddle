@@ -13,10 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
@@ -44,7 +40,7 @@ public class MainActivity extends Activity implements MeshStateListener {
     MessageHandler messageHandler = null;
 
     // Keep track of users connected to the mesh
-    UserStore userStore = null;
+    PeerStore peerStore = null;
 
     private String getUsername() {
         // Intent from first activity
@@ -68,8 +64,8 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
         messageSender = new MessageSender(mm, HELLO_PORT);
-        userStore = new UserStore();
-        messageHandler = new MessageHandler(userStore);
+        peerStore = new PeerStore();
+        messageHandler = new MessageHandler(peerStore);
     }
 
     /**
@@ -162,8 +158,8 @@ public class MainActivity extends Activity implements MeshStateListener {
      */
     private void updateStatus() {
         String status = "uuid: " + mm.getUuid().toString() + "\npeers:\n";
-        for (MeshID user : userStore.getAllUuids()) {
-            status += user.toString() + "\n";
+        for (MeshID peer : peerStore.getAllUuids()) {
+            status += peer.toString() + "\n";
         }
         TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
         txtStatus.setText(status);
@@ -202,8 +198,8 @@ public class MainActivity extends Activity implements MeshStateListener {
     private void handlePeerChanged(MeshManager.RightMeshEvent e) {
         // Update peer list.
         MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !userStore.containsUser(event.peerUuid)) {
-            userStore.addUser(event.peerUuid);
+        if (event.state != REMOVED && !peerStore.containsPeer(event.peerUuid)) {
+            peerStore.addPeer(event.peerUuid);
             try {
                 // tell the new person your name
                 messageSender.sendName(event.peerUuid, "PUT ACTUAL NAME HERE");
@@ -218,7 +214,7 @@ public class MainActivity extends Activity implements MeshStateListener {
             }
 
         } else if (event.state == REMOVED){
-            userStore.removeUser(event.peerUuid);
+            peerStore.removePeer(event.peerUuid);
         }
 
         // Update display.
@@ -236,7 +232,7 @@ public class MainActivity extends Activity implements MeshStateListener {
      * @param v calling view
      */
     public void sendHello(View v) throws RightMeshException {
-        for(MeshID receiver : userStore.getAllUuids()) {
+        for(MeshID receiver : peerStore.getAllUuids()) {
             String msg = "Hello to: " + receiver + " from" + mm.getUuid();
             MeshUtility.Log(this.getClass().getCanonicalName(), "MSG: " + msg);
             byte[] testData = msg.getBytes();

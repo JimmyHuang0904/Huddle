@@ -4,13 +4,13 @@ package io.left.hellomesh;
  * Created by Donney on 1/13/2018.
  */
 
-public class User {
+public class Peer {
     private String name;
     // Connected or disconnected
     private boolean isConnected;
     private String groupName;
 
-    public User(){
+    public Peer(){
         isConnected = true;
     }
 
