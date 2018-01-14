@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pair Up</string>
+    <string name="buttonSign">Sign In</string>
+    <string name="login_hint">Username</string>
 </resources>
