@@ -156,11 +156,11 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
                 // initialized, so say that the user is now connected
                 userData.setConnected();
             } catch (RightMeshException e) {
-                String status = "Error initializing the library" + e.toString();
+/*                String status = "Error initializing the library" + e.toString();
                 Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
                 TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
                 txtStatus.setText(status);
-                return;
+                return;*/
             }
         }
 
@@ -173,14 +173,14 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
     /**
      * Update the {@link TextView} with a list of all peers.
      */
-    private void updateStatus() {
+/*    private void updateStatus() {
         String status = "uuid: " + mm.getUuid().toString() + "\npeers:\n";
         for (MeshID peer : peerStore.getAllUuids()) {
             status += peer.toString() + "\n";
         }
         TextView txtStatus = (TextView) findViewById(R.id.txtStatus);
         txtStatus.setText(status);
-    }
+    }*/
 
     private void updateList() {
         ListView listView = (ListView) findViewById(R.id.groupList);
