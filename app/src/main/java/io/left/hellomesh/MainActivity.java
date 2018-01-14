@@ -173,7 +173,7 @@ public class MainActivity extends Activity implements MeshStateListener {
     private void handlePeerChanged(MeshManager.RightMeshEvent e) {
         // Update peer list.
         MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !users.contains(event.peerUuid)) {
+        if (event.state != REMOVED && !users.contains(event.peerUuid) && event.peerUuid != mm.getUuid()) {
             users.add(event.peerUuid);
         } else if (event.state == REMOVED){
             users.remove(event.peerUuid);
