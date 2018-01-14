@@ -8,6 +8,7 @@ public class UserData {
     private String name;
     private String group;
     private boolean isConnected;
+    private boolean isGracefulDisconnect;
 
     public UserData(String name) {
         this.name = name;
@@ -32,5 +33,11 @@ public class UserData {
 
     public boolean hasConnected() {
         return this.isConnected;
+    }
+
+    public boolean isGracefulDisconnect() {return  this.isGracefulDisconnect; }
+
+    public void setGracefulDisconnect(boolean gracefulDisconnect){
+        this.isGracefulDisconnect = gracefulDisconnect;
     }
 }

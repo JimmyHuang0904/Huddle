@@ -1,23 +1,19 @@
 package io.left.hellomesh;
 
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.os.Build;
-import android.content.Intent;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -284,8 +280,10 @@ public class MainActivity extends FragmentActivity implements MeshStateListener 
             peerStore.removePeer(event.peerUuid);
             // SOMEBODY DISCONNECTED OH NO!!!!
             // if theyre part of your group, then you should be alarmed
-            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid) != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
-                startAlarm(userData.getName());
+            if (userData.getGroup() != null && peerStore.getPeer(event.peerUuid).getGroupName().equals(userData.getGroup())) {
+                Intent intent = new Intent(getApplicationContext(), DisconnectActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("message", peerStore.getPeer(event.peerUuid).getName() + " has been disconnected.");
+                startActivity(intent);
             }
         }
 
